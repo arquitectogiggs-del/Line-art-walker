@@ -3,160 +3,266 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Line Art Character Study</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ink Character Rig</title>
 <style>
 *{box-sizing:border-box}
 body{
  margin:0;min-height:100vh;display:grid;place-items:center;
- background:#e7e2d8;font-family:Georgia,serif
+ background:#e9e4da;font-family:Georgia,serif
 }
-.paper{
- width:min(96vw,850px);aspect-ratio:16/10;
- background:#f7f3e9;border-radius:12px;
- box-shadow:0 15px 45px #28231b22;overflow:hidden
+.stage{
+ width:min(96vw,900px);aspect-ratio:16/10;
+ background:#f6f0e5;border-radius:14px;overflow:hidden;
+ box-shadow:0 15px 50px #302b2020;position:relative
 }
 svg{width:100%;height:100%}
-.ink{fill:none;stroke:#37352f;stroke-width:2;
- stroke-linecap:round;stroke-linejoin:round}
-.thin{fill:none;stroke:#686258;stroke-width:1.1;
- stroke-linecap:round;stroke-linejoin:round}
-.detail{fill:none;stroke:#999080;stroke-width:.8}
-.cloth{fill:#e9e3d6;stroke:#37352f;stroke-width:1.8;
- stroke-linejoin:round}
-.accent{fill:#929f98;stroke:#37352f;stroke-width:1.5}
-.skin{fill:#f0e8d9;stroke:#37352f;stroke-width:1.5}
-.head{transform-origin:350px 130px}
-.legA{transform-origin:345px 250px;animation:stepA 1.1s infinite ease-in-out}
-.legB{transform-origin:345px 250px;animation:stepB 1.1s infinite ease-in-out}
-.armA{transform-origin:365px 163px;animation:stepB 1.1s infinite ease-in-out}
-.armB{transform-origin:365px 163px;animation:stepA 1.1s infinite ease-in-out}
-@keyframes stepA{
- 0%,100%{transform:rotate(22deg)}
- 50%{transform:rotate(-22deg)}
+.ink{stroke:#39372f;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.thin{stroke:#756d60;stroke-width:1.1;fill:none;stroke-linecap:round}
+.skin{fill:#edcdb0}
+.coat{fill:#d8c0a5}
+.coat2{fill:#e7d2b9}
+.hijab{fill:#92958a}
+.pants{fill:#77796f}
+.shoe{fill:#eee7d9}
+.bag{fill:#48443c}
+.line{fill:none}
+#character{transform-origin:350px 365px}
+#torso{transform-origin:350px 220px;animation:torso 1.1s ease-in-out infinite}
+#head{transform-origin:350px 140px;animation:head 1.1s ease-in-out infinite}
+#scarfTail{transform-origin:330px 140px;animation:scarf 1.1s ease-in-out infinite}
+#coatTail{transform-origin:325px 280px;animation:coat 1.1s ease-in-out infinite}
+#bag{transform-origin:310px 190px;animation:bag 1.1s ease-in-out infinite}
+#frontLeg{transform-origin:350px 285px;animation:legA 1.1s ease-in-out infinite}
+#backLeg{transform-origin:350px 285px;animation:legB 1.1s ease-in-out infinite}
+#frontArm{transform-origin:370px 180px;animation:armA 1.1s ease-in-out infinite}
+#backArm{transform-origin:330px 180px;animation:armB 1.1s ease-in-out infinite}
+
+@keyframes torso{
+ 0%,100%{transform:translateY(0) rotate(-1deg)}
+ 50%{transform:translateY(-3px) rotate(1deg)}
 }
-@keyframes stepB{
- 0%,100%{transform:rotate(-22deg)}
- 50%{transform:rotate(22deg)}
+@keyframes head{
+ 0%,100%{transform:rotate(1deg)}
+ 50%{transform:rotate(-1deg)}
 }
+@keyframes scarf{
+ 0%,100%{transform:rotate(-2deg)}
+ 50%{transform:rotate(3deg)}
+}
+@keyframes coat{
+ 0%,100%{transform:rotate(-2deg)}
+ 50%{transform:rotate(3deg)}
+}
+@keyframes bag{
+ 0%,100%{transform:rotate(-3deg)}
+ 50%{transform:rotate(4deg)}
+}
+@keyframes legA{
+ 0%,100%{transform:rotate(20deg)}
+ 50%{transform:rotate(-20deg)}
+}
+@keyframes legB{
+ 0%,100%{transform:rotate(-20deg)}
+ 50%{transform:rotate(20deg)}
+}
+@keyframes armA{
+ 0%,100%{transform:rotate(-14deg)}
+ 50%{transform:rotate(14deg)}
+}
+@keyframes armB{
+ 0%,100%{transform:rotate(14deg)}
+ 50%{transform:rotate(-14deg)}
+}
+.controls{
+ position:absolute;bottom:14px;left:50%;
+ transform:translateX(-50%);
+ display:flex;gap:9px;align-items:center
+}
+button{
+ border:1px solid #aaa18f;background:#eee7d9;
+ color:#39372f;padding:9px 15px;border-radius:30px;
+ font-size:13px
+}
+.paused *{animation-play-state:paused!important}
 </style>
 </head>
 <body>
-<div class="paper">
+<div class="stage" id="stage">
 <svg viewBox="0 0 700 440">
-<defs>
- <filter id="grain">
-  <feTurbulence type="fractalNoise" baseFrequency=".8"
-   numOctaves="2" seed="8"/>
-  <feColorMatrix values="0 0 0 0 0.5
-   0 0 0 0 0.45 0 0 0 0 0.35 0 0 0 .045 0"/>
- </filter>
-</defs>
-
 <!-- Ground -->
-<path class="thin" d="M70 371 Q350 367 630 371"/>
-<path class="detail" d="M275 375 Q350 370 425 375"/>
+<path d="M80 374 Q350 370 620 374" class="thin"/>
+<path d="M240 379 Q350 376 460 379" class="thin"/>
+
+<g id="character">
 
 <!-- Back leg -->
-<g class="legB">
- <path class="ink" d="M337 247 Q326 278 319 304 Q310 328 303 348"/>
- <path class="thin" d="M344 250 Q337 282 329 307 L316 348"/>
- <path class="ink" d="M303 348 Q292 351 285 359 Q298 365 323 360 L330 354"/>
- <path class="thin" d="M292 359 Q306 358 319 360"/>
- <path class="detail" d="M313 319 Q319 321 328 323"/>
+<g id="backLeg">
+ <path d="M340 265 Q330 293 320 320 L303 356
+ Q300 363 311 366 L337 365 Q343 361 333 355
+ L340 325 Q355 296 359 271Z"
+ class="pants ink"/>
+ <path d="M331 289 Q332 316 315 349" class="thin"/>
+ <path d="M303 356 Q291 361 288 369
+ Q310 375 339 369 L337 363Z" class="shoe ink"/>
+ <path d="M298 366 Q315 367 332 365" class="thin"/>
 </g>
 
 <!-- Front leg -->
-<g class="legA">
- <path class="ink" d="M350 248 Q362 278 371 304 Q380 329 390 348"/>
- <path class="thin" d="M358 248 Q371 281 380 308 L399 348"/>
- <path class="ink" d="M390 348 Q406 350 416 359 Q405 366 384 360 L377 355"/>
- <path class="thin" d="M387 357 Q400 358 410 361"/>
- <path class="detail" d="M374 318 Q383 320 390 318"/>
+<g id="frontLeg">
+ <path d="M350 265 Q363 295 371 319
+ L393 355 Q399 363 388 366
+ L361 362 Q355 358 364 352
+ L350 323 Q334 297 335 271Z"
+ class="pants ink"/>
+ <path d="M361 293 Q363 321 387 350" class="thin"/>
+ <path d="M393 355 Q408 354 417 368
+ Q400 376 373 369 L364 362Z" class="shoe ink"/>
+ <path d="M375 365 Q397 369 411 367" class="thin"/>
+ <path d="M386 358 L392 363 M396 359 L402 365" class="thin"/>
 </g>
 
-<!-- Torso and coat -->
-<path class="cloth" d="
- M332 151 Q319 157 316 180
- L310 218 Q307 239 323 250
- Q344 262 371 251
- Q389 244 383 220
- L377 180 Q374 157 359 151
- L350 174 Z"/>
-
-<!-- Coat structure -->
-<path class="ink" d="M350 174 Q347 198 350 224 L347 250"/>
-<path class="thin" d="M333 158 Q340 174 343 190
- Q338 210 339 235"/>
-<path class="thin" d="M369 159 Q360 177 359 194
- Q368 216 370 244"/>
-<path class="ink" d="M326 190 Q345 199 373 190"/>
-<path class="thin" d="M330 211 Q350 219 374 211"/>
-<path class="thin" d="M331 232 Q350 239 373 231"/>
-<circle cx="354" cy="205" r="2" fill="#37352f"/>
-<circle cx="354" cy="222" r="2" fill="#37352f"/>
-<path class="ink" d="M325 246 Q349 256 377 246"/>
-
-<!-- Neck -->
-<path class="skin" d="M338 127 L338 151
- Q350 164 364 150 L362 126"/>
-
-<!-- Collar and scarf -->
-<path class="accent" d="M335 146 Q350 159 365 144
- L375 158 Q357 175 336 159 Z"/>
-<path class="accent" d="M361 153 Q378 159 382 179
- Q373 173 365 184 L358 163 Z"/>
-<path class="thin" d="M367 161 Q374 166 376 173"/>
-
-<!-- Arms -->
-<g class="armB">
- <path class="cloth" d="M321 161 Q307 172 301 194
- L291 224 L302 230 Q316 208 324 190 L334 172 Z"/>
- <path class="ink" d="M291 224 Q284 232 287 244
- Q292 252 300 244 L305 230"/>
- <path class="thin" d="M294 232 Q298 238 300 245"/>
-</g>
-<g class="armA">
- <path class="cloth" d="M373 160 Q388 169 396 192
- L410 218 L400 227 Q385 207 379 192 L364 175 Z"/>
- <path class="ink" d="M410 218 Q420 225 420 237
- Q415 247 407 239 L400 227"/>
- <path class="thin" d="M412 231 Q408 236 407 241"/>
+<!-- Back arm -->
+<g id="backArm">
+ <path d="M329 164 Q311 180 304 211
+ L292 246 Q291 255 301 258
+ L312 249 L325 217 Q344 191 346 177Z"
+ class="coat ink"/>
+ <path d="M292 246 Q281 258 290 269
+ Q298 274 305 264 L312 249Z" class="skin ink"/>
+ <path d="M302 261 L300 270 M296 263 L294 269" class="thin"/>
 </g>
 
-<!-- Head -->
-<g class="head">
- <path class="skin" d="M328 105
- Q326 76 346 67 Q371 64 380 87
- Q385 101 378 125 Q371 144 352 146
- Q333 141 329 123 Z"/>
- <!-- Hair -->
- <path class="ink" d="M328 111 Q320 87 333 72
- Q346 57 366 65 Q383 70 384 94
- Q376 82 366 81 Q350 91 330 90"/>
- <path class="thin" d="M332 86 Q343 68 358 69"/>
- <path class="thin" d="M365 70 Q377 76 380 88"/>
+<!-- Bag behind torso -->
+<g id="bag">
+ <path d="M331 157 Q310 145 296 169
+ L278 220 Q274 236 290 244
+ L317 229 Q333 204 331 157Z" class="bag ink"/>
+ <path d="M333 160 Q307 169 297 206" class="thin"/>
+ <path d="M294 177 Q318 150 335 173" class="thin"/>
+ <path d="M283 216 Q298 230 315 226" class="thin"/>
+ <path d="M287 232 L310 239" class="thin"/>
+ <circle cx="298" cy="220" r="2" fill="#d9c6a7"/>
+</g>
+
+<!-- Torso -->
+<g id="torso">
+ <!-- Shirt -->
+ <path d="M337 147 Q351 140 367 150
+ L377 207 L365 267 L328 266 L316 206Z"
+ fill="#eee8dc" class="ink"/>
+
+ <!-- Neck -->
+ <path d="M340 124 L340 153 Q351 166 363 150 L362 124"
+ class="skin ink"/>
+
+ <!-- Coat body -->
+ <path d="M333 151 Q314 158 310 188
+ L301 254 Q298 271 315 281
+ L343 271 L350 177 L359 271
+ L385 282 Q400 271 393 249
+ L379 181 Q376 158 362 151
+ L350 175Z" class="coat2 ink"/>
+
+ <!-- Lapels -->
+ <path d="M334 152 L350 176 L341 203
+ L325 171Z" class="coat ink"/>
+ <path d="M365 151 L350 176 L362 202
+ L379 169Z" class="coat ink"/>
+
+ <!-- Coat details -->
+ <path d="M350 177 L349 265" class="thin"/>
+ <path d="M321 192 Q334 208 333 232" class="thin"/>
+ <path d="M377 192 Q366 212 371 238" class="thin"/>
+ <path d="M310 251 Q328 265 343 261" class="thin"/>
+ <path d="M359 262 Q376 270 389 257" class="thin"/>
+ <path d="M315 220 L324 224 M378 220 L387 217" class="thin"/>
+ <circle cx="359" cy="224" r="2" fill="#756d60"/>
+
+ <!-- Waist belt -->
+ <path d="M318 247 Q350 255 379 246 L380 256
+ Q350 265 317 258Z" fill="#4b463c" class="ink"/>
+ <rect x="350" y="249" width="13" height="12"
+ fill="none" class="ink"/>
+</g>
+
+<!-- Front arm -->
+<g id="frontArm">
+ <path d="M375 165 Q392 179 400 210
+ L416 242 Q417 251 406 257
+ L396 247 L381 217 Q360 193 359 177Z"
+ class="coat2 ink"/>
+ <path d="M416 242 Q428 251 421 267
+ Q415 277 407 266 L406 257Z" class="skin ink"/>
+ <path d="M416 264 L415 275 M421 262 L422 271" class="thin"/>
+</g>
+
+<!-- Coat tail -->
+<g id="coatTail">
+ <path d="M312 255 Q294 277 281 309
+ Q264 336 282 344 Q309 338 330 314
+ L350 277 L343 264Z" class="coat2 ink"/>
+ <path d="M307 273 Q294 307 282 331" class="thin"/>
+ <path d="M320 283 Q309 310 297 328" class="thin"/>
+ <path d="M283 337 Q304 331 319 315" class="thin"/>
+</g>
+
+<!-- Head and hijab -->
+<g id="head">
+ <!-- Hijab silhouette -->
+ <path d="M322 119 Q305 90 321 65
+ Q341 38 372 56 Q396 76 379 112
+ Q372 128 365 145 L383 157
+ Q365 165 344 153 Q321 144 312 127Z"
+ class="hijab ink"/>
+ <!-- Face -->
+ <path d="M340 79 Q360 65 377 83
+ Q390 98 379 121 Q370 140 351 138
+ Q337 130 335 112Z" class="skin ink"/>
  <!-- Face profile -->
- <path class="ink" d="M376 107 Q383 111 389 115
- Q383 119 377 119"/>
- <path class="thin" d="M373 100 Q377 97 381 100"/>
- <path class="ink" d="M370 127 Q360 132 352 128"/>
- <path class="thin" d="M351 128 Q357 136 365 131"/>
- <circle cx="372" cy="104" r="1.5" fill="#37352f"/>
- <!-- Ear -->
- <path class="thin" d="M335 108 Q326 105 328 117
- Q330 125 337 120"/>
- <path class="detail" d="M332 112 Q338 111 334 117"/>
+ <path d="M379 104 Q388 109 394 114
+ Q387 120 379 118" class="skin ink"/>
+ <path d="M370 122 Q361 130 352 124" class="thin"/>
+ <path d="M361 99 Q367 95 373 98" class="thin"/>
+ <path d="M368 102 L370 104" class="ink"/>
+ <path d="M351 113 Q356 116 360 113" class="thin"/>
+ <!-- Hijab folds -->
+ <path d="M326 83 Q342 55 366 58" class="thin"/>
+ <path d="M321 99 Q342 76 368 70" class="thin"/>
+ <path d="M323 115 Q343 94 377 87" class="thin"/>
+ <path d="M329 128 Q347 110 378 108" class="thin"/>
+ <path d="M333 139 Q351 129 373 125" class="thin"/>
+ <!-- Scarf around neck -->
+ <path d="M331 137 Q349 151 371 135
+ L382 151 Q357 171 330 153Z" class="hijab ink"/>
 </g>
 
-<!-- Hair details -->
-<path class="thin" d="M334 78 Q345 60 360 67"/>
-<path class="thin" d="M340 83 Q351 72 365 76"/>
-<path class="detail" d="M330 96 Q336 91 341 91"/>
+<!-- Hijab tail -->
+<g id="scarfTail">
+ <path d="M329 145 Q305 149 286 165
+ Q269 178 251 180 Q265 193 289 185
+ Q309 180 337 159Z" class="hijab ink"/>
+ <path d="M322 157 Q295 172 270 179" class="thin"/>
+ <path d="M316 163 Q294 180 276 182" class="thin"/>
+</g>
 
-<!-- Paper texture -->
-<rect width="700" height="440" filter="url(#grain)" opacity=".16"/>
+</g>
 </svg>
+
+<div class="controls">
+ <button onclick="toggle()">Pause / Play</button>
+ <button onclick="speed(0.7)">Slow</button>
+ <button onclick="speed(1.1)">Normal</button>
 </div>
+</div>
+<script>
+const stage=document.getElementById('stage');
+function toggle(){stage.classList.toggle('paused')}
+function speed(v){
+ document.querySelectorAll('#character g').forEach(el=>{
+  el.style.animationDuration=(1.1/v)+'s';
+ });
+}
+</script>
 </body>
 </html>
