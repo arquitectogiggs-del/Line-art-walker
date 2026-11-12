@@ -1,679 +1,524 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Ink Walker — Natural Motion V2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hijabi Walker - V3</title>
 
 <style>
-*{box-sizing:border-box}
+* { box-sizing: border-box; }
 
-body{
- margin:0;
- min-height:100vh;
- display:grid;
- place-items:center;
- background:#e8e2d7;
- font-family:Arial,sans-serif;
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #e9e6df;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, sans-serif;
 }
 
-.stage{
- width:min(96vw,900px);
- aspect-ratio:16/10;
- position:relative;
- overflow:hidden;
- background:#f7f2e8;
- border-radius:14px;
- box-shadow:0 15px 45px #302b2020;
+.app {
+  width: min(960px, 96vw);
+  padding: 18px;
 }
 
-svg{width:100%;height:100%;display:block}
-
-.ink{
- fill:none;
- stroke:#39372f;
- stroke-width:2;
- stroke-linecap:round;
- stroke-linejoin:round;
+.scene {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #f5f2eb;
+  box-shadow: 0 12px 40px #00000012;
 }
 
-.fine{
- fill:none;
- stroke:#777064;
- stroke-width:1.1;
- stroke-linecap:round;
- stroke-linejoin:round;
+svg {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
-.skin{fill:#edcdb0;stroke:#39372f;stroke-width:1.6}
-.coat{fill:#ddc9ae;stroke:#39372f;stroke-width:1.8}
-.coatDark{fill:#cdb99d;stroke:#39372f;stroke-width:1.7}
-.hijab{fill:#92958a;stroke:#39372f;stroke-width:1.8}
-.pants{fill:#77796f;stroke:#39372f;stroke-width:1.8}
-.shoe{fill:#eee7d9;stroke:#39372f;stroke-width:1.8}
-
-.controls{
- position:absolute;
- bottom:13px;
- left:50%;
- transform:translateX(-50%);
- display:flex;
- gap:8px;
- z-index:5;
+.ground {
+  stroke: #b8b2a7;
+  stroke-width: 1.5;
 }
 
-button{
- border:1px solid #aaa18f;
- border-radius:30px;
- padding:9px 15px;
- background:#f7f2e8;
- color:#39372f;
- font-size:13px;
- cursor:pointer;
+.ink {
+  stroke: #282725;
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
 }
 
-button:active{transform:scale(.96)}
-
-.info{
- position:absolute;
- top:13px;
- left:15px;
- color:#898274;
- font-size:10px;
- letter-spacing:1.5px;
+.cloth {
+  fill: #d7cfc1;
+  stroke: #282725;
+  stroke-width: 3;
+  stroke-linejoin: round;
 }
 
+.skin {
+  fill: #c99578;
+  stroke: #282725;
+  stroke-width: 2.8;
+  stroke-linejoin: round;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 15px 4px 4px;
+}
+
+button {
+  border: 0;
+  border-radius: 20px;
+  background: #33312e;
+  color: white;
+  padding: 10px 22px;
+  font-size: 14px;
+}
+
+button:active { transform: scale(.97); }
+
+.caption {
+  color: #777168;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 10px;
+}
 </style>
 </head>
 
 <body>
+<div class="app">
 
-<div class="stage" id="stage">
+  <div class="scene">
+    <svg viewBox="0 0 800 480" id="stage">
 
-<div class="info">INK WALKER / NATURAL MOTION V2</div>
+      <rect width="800" height="480" fill="#f5f2eb"/>
 
-<svg viewBox="0 0 700 440">
+      <path class="ground" d="M0 390 H800"/>
 
-<!-- Environment -->
-<path d="M35 369 Q350 366 665 369" class="fine"/>
-<path d="M240 374 Q350 371 460 374"
- class="fine" opacity=".35"/>
+      <g id="character">
 
-<g id="walker">
+        <!-- الظل -->
+        <ellipse id="shadow"
+          cx="0" cy="0" rx="38" ry="5"
+          fill="#282725" opacity=".12"/>
 
-<!-- BACK LEG -->
-<g id="backLeg">
- <path id="backUpper" class="pants"/>
- <path id="backLower" class="ink"/>
- <path id="backShoe" class="shoe"/>
- <path id="backShoeDetail" class="fine"/>
-</g>
+        <!-- الرجل الخلفية -->
+        <g id="backLeg">
+          <path id="backLegShape" class="cloth"/>
+          <path id="backLegDetail" class="ink"/>
+          <path id="backShoe" class="ink"/>
+        </g>
 
-<!-- FRONT LEG -->
-<g id="frontLeg">
- <path id="frontUpper" class="pants"/>
- <path id="frontLower" class="ink"/>
- <path id="frontShoe" class="shoe"/>
- <path id="frontShoeDetail" class="fine"/>
-</g>
+        <!-- الرجل الأمامية -->
+        <g id="frontLeg">
+          <path id="frontLegShape" class="cloth"/>
+          <path id="frontLegDetail" class="ink"/>
+          <path id="frontShoe" class="ink"/>
+        </g>
 
-<!-- BAG -->
-<g id="bag">
- <path d="
- M331 161 Q309 145 294 168
- L280 216 Q275 235 291 244
- L319 229 Q334 199 331 161Z"
- fill="#555047" class="ink"/>
+        <!-- الذراع الخلفية -->
+        <g id="backArm">
+          <path id="backArmShape"
+            d="M-5 -105 Q-20 -65 -17 -30"
+            stroke="#282725" stroke-width="15"
+            stroke-linecap="round" fill="none"/>
+          <path id="backArmDetail" class="ink"/>
+          <path id="backHand" class="skin"
+            d="M-17 -31 Q-26 -22 -19 -12 Q-10 -8 -8 -20 Z"/>
+        </g>
 
- <path d="M327 161 Q304 161 292 208" class="fine"/>
- <path d="M292 180 Q310 158 329 176" class="fine"/>
- <path d="M286 222 Q301 233 316 225" class="fine"/>
- <path d="M293 236 L311 231" class="fine"/>
- <circle cx="302" cy="217" r="2" fill="#d9c6a7"/>
-</g>
+        <!-- الجسم -->
+        <g id="body">
 
-<!-- BACK ARM -->
-<g id="backArm">
- <path id="backArmShape" class="coat"/>
- <path id="backArmDetail" class="fine"/>
- <path id="backHand" class="skin"/>
-</g>
+          <path class="cloth"
+            d="M-17 -112
+               Q-36 -107 -39 -82
+               L-46 -15
+               Q-42 5 -28 9
+               L28 9
+               Q44 1 42 -18
+               L34 -84
+               Q30 -108 12 -112 Z"/>
 
-<!-- TORSO -->
-<g id="torso">
+          <path class="ink"
+            d="M-26 -87 Q0 -72 28 -88"/>
 
-<!-- Shirt -->
-<path d="
- M337 147 Q351 140 367 150
- L377 207 L365 267
- L328 266 L316 206Z"
- fill="#eee8dc" class="ink"/>
+          <!-- المعطف -->
+          <path class="cloth"
+            d="M-36 -83
+               Q-51 -52 -45 -8
+               Q-42 9 -29 17
+               L-8 15
+               Q-19 -21 -17 -77 Z"/>
 
-<!-- Main coat -->
-<path d="
- M333 151 Q314 158 310 188
- L301 254 Q298 271 315 281
- L343 271 L350 177 L359 271
- L385 282 Q400 271 393 249
- L379 181 Q376 158 362 151
- L350 175Z"
- class="coat"/>
+          <path class="cloth"
+            d="M17 -77
+               Q30 -45 25 -10
+               Q22 8 38 16
+               Q52 2 47 -22
+               L34 -84 Z"/>
 
-<!-- Lapels -->
-<path d="M334 152 L350 176 L341 203 L325 171Z"
- class="coatDark"/>
-<path d="M365 151 L350 176 L362 202 L379 169Z"
- class="coatDark"/>
+          <path class="ink"
+            d="M-7 -78 Q-2 -40 -5 5"/>
 
-<!-- Coat seams -->
-<path d="M350 177 L349 265" class="fine"/>
-<path d="M326 190 Q340 210 333 238" class="fine"/>
-<path d="M375 190 Q363 211 371 239" class="fine"/>
-<path d="M310 251 Q327 266 343 261" class="fine"/>
-<path d="M359 262 Q376 270 389 257" class="fine"/>
+        </g>
 
-<!-- Fabric folds -->
-<path d="M319 213 L330 219 M374 215 L384 210" class="fine"/>
-<path d="M322 236 Q331 244 337 241" class="fine"/>
-<path d="M370 239 Q379 243 383 237" class="fine"/>
+        <!-- الذراع الأمامية -->
+        <g id="frontArm">
+          <path id="frontArmShape"
+            d="M27 -103 Q42 -65 35 -30"
+            stroke="#282725" stroke-width="16"
+            stroke-linecap="round" fill="none"/>
+          <path id="frontArmDetail" class="ink"/>
+          <path id="frontHand" class="skin"
+            d="M29 -31 Q22 -22 29 -12 Q39 -8 40 -20 Z"/>
+        </g>
 
-<!-- Buttons -->
-<circle cx="358" cy="208" r="2" fill="#756d60"/>
-<circle cx="358" cy="226" r="2" fill="#756d60"/>
+        <!-- الرأس والحجاب -->
+        <g id="head">
 
-<!-- Waist -->
-<path d="M318 247 Q350 255 379 246
- L380 256 Q350 265 317 258Z"
- fill="#514a3f" stroke="#39372f" stroke-width="1.4"/>
+          <path class="skin"
+            d="M-9 -174
+               Q-15 -192 1 -200
+               Q22 -203 29 -185
+               L27 -153
+               Q15 -135 -2 -151 Z"/>
 
-<rect x="350" y="249" width="13" height="12"
- fill="none" stroke="#39372f" stroke-width="1.5"/>
+          <!-- الحجاب -->
+          <path class="cloth"
+            d="M-18 -183
+               Q-26 -214 4 -219
+               Q36 -219 38 -185
+               Q42 -151 26 -125
+               Q15 -111 -13 -120
+               Q-31 -133 -27 -158
+               Q-27 -175 -18 -183 Z"/>
 
-</g>
+          <path class="ink"
+            d="M-17 -181
+               Q-8 -194 9 -193
+               Q25 -190 31 -176"/>
 
-<!-- FRONT ARM -->
-<g id="frontArm">
- <path id="frontArmShape" class="coat"/>
- <path id="frontArmDetail" class="fine"/>
- <path id="frontHand" class="skin"/>
-</g>
+          <path class="ink"
+            d="M-24 -151 Q-14 -132 7 -127
+               Q20 -124 28 -137"/>
 
-<!-- COAT TAIL -->
-<g id="coatTail">
- <path d="
- M312 255 Q294 277 281 309
- Q264 336 282 344
- Q309 338 330 314
- L350 277 L343 264Z"
- fill="#d7c3a8" stroke="#39372f" stroke-width="1.8"/>
+          <!-- الوجه -->
+          <path class="skin"
+            d="M-7 -183
+               Q12 -193 27 -178
+               L25 -153
+               Q18 -139 5 -143
+               Q-8 -148 -11 -163 Z"/>
 
- <path d="M307 273 Q294 307 282 331" class="fine"/>
- <path d="M320 283 Q309 310 297 328" class="fine"/>
- <path d="M283 337 Q304 331 319 315" class="fine"/>
-</g>
+          <!-- العين والأنف -->
+          <path class="ink"
+            d="M13 -169 Q18 -172 22 -168"/>
+          <path class="ink"
+            d="M25 -164 L29 -159 L25 -157"/>
 
-<!-- HEAD -->
-<g id="head">
+          <path class="ink"
+            d="M12 -149 Q18 -146 22 -149"/>
 
-<!-- Neck -->
-<path d="M340 124 L340 151
- Q351 164 363 150 L362 124Z" class="skin"/>
+        </g>
 
-<!-- Face -->
-<path d="
- M340 79 Q360 65 377 83
- Q390 98 379 121
- Q370 140 351 138
- Q337 130 335 112Z"
- class="skin"/>
+        <!-- الحقيبة -->
+        <g id="bag">
+          <path class="ink"
+            d="M-27 -99 Q-55 -64 -39 -30"/>
+          <path class="cloth"
+            d="M-53 -38 Q-49 -48 -36 -43
+               L-26 -17 Q-39 -8 -51 -20 Z"/>
+        </g>
 
-<!-- Facial details -->
-<path d="M361 99 Q367 95 373 98" class="fine"/>
-<circle cx="372" cy="102" r="1.5" fill="#39372f"/>
-<path d="M379 107 Q388 111 394 115
- Q387 120 379 118" class="fine"/>
-<path d="M370 127 Q360 132 352 128" class="fine"/>
+      </g>
 
-<!-- Hijab -->
-<path d="
- M322 119 Q305 90 321 65
- Q341 38 372 56
- Q396 76 379 112
- Q372 128 365 145
- L383 157 Q365 165 344 153
- Q321 144 312 127Z"
- class="hijab"/>
+      <text x="20" y="35" fill="#aaa398"
+        font-size="12" letter-spacing="2">
+        WALK CYCLE / V3
+      </text>
 
-<!-- Hijab folds -->
-<path d="M326 83 Q342 55 366 58" class="fine"/>
-<path d="M321 99 Q342 76 368 70" class="fine"/>
-<path d="M323 115 Q343 94 377 87" class="fine"/>
-<path d="M329 128 Q347 110 378 108" class="fine"/>
-<path d="M333 139 Q351 129 373 125" class="fine"/>
+    </svg>
+  </div>
 
-<!-- Neck wrap -->
-<path d="
- M331 137 Q349 151 371 135
- L382 151 Q357 171 330 153Z"
- class="hijab"/>
+  <div class="controls">
+    <button id="toggle">إيقاف الحركة</button>
+    <button id="restart">إعادة التشغيل</button>
+  </div>
 
-</g>
-
-<!-- SCARF TAIL -->
-<g id="scarfTail">
- <path d="
- M329 145 Q305 149 286 165
- Q269 178 251 180
- Q265 193 289 185
- Q309 180 337 159Z"
- class="hijab"/>
-
- <path d="M322 157 Q295 172 270 179" class="fine"/>
- <path d="M316 163 Q294 180 276 182" class="fine"/>
-</g>
-
-</g>
-</svg>
-
-<div class="controls">
- <button id="toggle">Pause</button>
- <button id="slower">Slow</button>
- <button id="faster">Fast</button>
- <button id="normal">Normal</button>
-</div>
+  <div class="caption">
+    Natural Walking · Foot Contact · Two-Bone IK
+  </div>
 
 </div>
 
 <script>
 const $ = id => document.getElementById(id);
 
-const walker = $('walker');
+const character = $("character");
+const shadow = $("shadow");
 
-const CONFIG = {
- speed:85,
- stride:72,
- stance:0.62,
- ground:357,
- upper:58,
- lower:58
-};
+let running = true;
+let lastTime = 0;
+let elapsed = 0;
 
-let running=true;
-let x=760;
-let previous=0;
-let travel=0;
+const cycleDuration = 1.15;
+const strideLength = 70;
+const travelSpeed = strideLength / cycleDuration;
 
-let scarfAngle=0;
-let scarfVelocity=0;
-let coatAngle=0;
-let coatVelocity=0;
-let bagAngle=0;
-let bagVelocity=0;
+const legLengthA = 72;
+const legLengthB = 76;
 
-const mod=(v,n)=>((v%n)+n)%n;
-const mix=(a,b,t)=>a+(b-a)*t;
-const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const clamp = (v, min, max) =>
+  Math.max(min, Math.min(max, v));
 
-function gait(phase){
+const lerp = (a, b, t) =>
+  a + (b - a) * t;
 
- phase=mod(phase,1);
+function smooth(t) {
+  return t * t * (3 - 2 * t);
+}
 
- if(phase<CONFIG.stance){
+/* حساب الركبة هندسياً باستخدام أطوال العظام */
+function solveIK(hip, ankle, upper, lower, bend) {
 
-  const p=phase/CONFIG.stance;
+  let dx = ankle.x - hip.x;
+  let dy = ankle.y - hip.y;
+
+  let distance = Math.sqrt(dx * dx + dy * dy);
+
+  distance = clamp(
+    distance,
+    Math.abs(upper - lower) + .01,
+    upper + lower - .01
+  );
+
+  const angle = Math.atan2(dy, dx);
+
+  const along =
+    (upper * upper - lower * lower + distance * distance)
+    / (2 * distance);
+
+  const height = Math.sqrt(
+    Math.max(0, upper * upper - along * along)
+  );
+
+  const baseX = Math.cos(angle) * along;
+  const baseY = Math.sin(angle) * along;
+
+  const perpendicularX = -Math.sin(angle);
+  const perpendicularY = Math.cos(angle);
 
   return {
-   x:mix(
-    -CONFIG.stride/2,
-    -CONFIG.stride/2+CONFIG.stride*CONFIG.stance,
-    p
-   ),
-   y:0,
-   stance:true,
-   progress:p
+    x: hip.x + baseX + perpendicularX * height * bend,
+    y: hip.y + baseY + perpendicularY * height * bend
   };
-
- }
-
- const p=(phase-CONFIG.stance)/(1-CONFIG.stance);
-
- return {
-  x:mix(
-   -CONFIG.stride/2+CONFIG.stride*CONFIG.stance,
-   -CONFIG.stride/2,
-   p
-  ),
-  y:-Math.sin(Math.PI*p)*35,
-  stance:false,
-  progress:p
- };
-
 }
 
-function solveIK(hip,foot){
+/* رسم ساق واحدة وحذائها */
+function drawLeg(name, phase, rootX, lift) {
 
- const dx=foot.x-hip.x;
- const dy=foot.y-hip.y;
+  const hip = { x: 0, y: 0 };
 
- const distance=clamp(
-  Math.hypot(dx,dy),
-  1,
-  CONFIG.upper+CONFIG.lower-.01
- );
+  let footX;
+  let footY;
+  let stance;
 
- const a=(
-  CONFIG.upper**2-
-  CONFIG.lower**2+
-  distance**2
- )/(2*distance);
+  if (phase < .60) {
 
- const h=Math.sqrt(
-  Math.max(0,CONFIG.upper**2-a**2)
- );
+    stance = true;
 
- const ux=dx/distance;
- const uy=dy/distance;
+    const u = phase / .60;
 
- // Forward-facing knee bend
- return {
-  x:hip.x+ux*a-uy*h,
-  y:hip.y+uy*a+ux*h
- };
+    /*
+      القدم تتحرك للخلف محلياً بنفس سرعة الجسم
+      وبالتالي تظل ثابتة تقريباً بالنسبة للأرض.
+    */
+    footX = lerp(24, -18, u);
+    footY = 112;
 
+  } else {
+
+    stance = false;
+
+    const u = (phase - .60) / .40;
+    const s = smooth(u);
+
+    footX = lerp(-18, 24, s);
+    footY = 112 - Math.sin(Math.PI * u) * 25;
+  }
+
+  const ankle = { x: footX, y: footY };
+
+  const knee = solveIK(
+    hip,
+    ankle,
+    legLengthA,
+    legLengthB,
+    name === "front" ? 1 : -1
+  );
+
+  const thickness = name === "front" ? 15 : 13;
+
+  const path = `
+    M ${hip.x - thickness/2} ${hip.y}
+    Q ${knee.x - thickness/2} ${knee.y - 5}
+      ${ankle.x - thickness/2} ${ankle.y}
+    L ${ankle.x + thickness/2} ${ankle.y}
+    Q ${knee.x + thickness/2} ${knee.y - 5}
+      ${hip.x + thickness/2} ${hip.y}
+    Z
+  `;
+
+  $(name + "LegShape").setAttribute("d", path);
+
+  $(name + "LegDetail").setAttribute(
+    "d",
+    `M ${hip.x} ${hip.y + 12}
+     Q ${knee.x} ${knee.y}
+     ${ankle.x} ${ankle.y - 5}`
+  );
+
+  const shoe = `
+    M ${ankle.x - 8} ${ankle.y}
+    Q ${ankle.x - 5} ${ankle.y + 8}
+      ${ankle.x + 4} ${ankle.y + 9}
+    L ${ankle.x + 28} ${ankle.y + 7}
+    Q ${ankle.x + 34} ${ankle.y + 5}
+      ${ankle.x + 30} ${ankle.y}
+  `;
+
+  $(name + "Shoe").setAttribute("d", shoe);
+
+  return { ankle, knee, stance };
 }
 
-function segmentPath(a,b,width){
+/* حركة الذراعين */
+function drawArms(phase) {
 
- const dx=b.x-a.x;
- const dy=b.y-a.y;
- const length=Math.hypot(dx,dy)||1;
+  const swing = Math.sin(phase * Math.PI * 2);
 
- const nx=-dy/length*width;
- const ny=dx/length*width;
+  const backHandX = -17 - swing * 15;
+  const backHandY = -30 + Math.cos(phase * Math.PI * 2) * 7;
 
- return `
- M ${a.x+nx} ${a.y+ny}
- Q ${(a.x+b.x)/2+nx*1.1}
-   ${(a.y+b.y)/2+ny*1.1}
-   ${b.x+nx*.5} ${b.y+ny*.5}
+  const frontHandX = 35 + swing * 15;
+  const frontHandY = -30 - Math.cos(phase * Math.PI * 2) * 7;
 
- M ${a.x-nx} ${a.y-ny}
- Q ${(a.x+b.x)/2-nx*1.1}
-   ${(a.y+b.y)/2-ny*1.1}
-   ${b.x-nx*.5} ${b.y-ny*.5}
- `;
+  $("backArmShape").setAttribute(
+    "d",
+    `M-5 -105 Q${-15-swing*10} -65 ${backHandX} ${backHandY}`
+  );
 
+  $("backArmDetail").setAttribute(
+    "d",
+    `M-5 -105 Q${-15-swing*10} -65 ${backHandX} ${backHandY}`
+  );
+
+  $("backHand").setAttribute(
+    "transform",
+    `translate(${backHandX+17} ${backHandY+30})`
+  );
+
+  $("frontArmShape").setAttribute(
+    "d",
+    `M27 -103 Q${42+swing*10} -65 ${frontHandX} ${frontHandY}`
+  );
+
+  $("frontArmDetail").setAttribute(
+    "d",
+    `M27 -103 Q${42+swing*10} -65 ${frontHandX} ${frontHandY}`
+  );
+
+  $("frontHand").setAttribute(
+    "transform",
+    `translate(${frontHandX-35} ${frontHandY+30})`
+  );
 }
 
-function drawLeg(prefix,hipX,phase){
+function render(time) {
 
- const step=gait(phase);
+  if (!running) return;
 
- const hip={x:hipX,y:267};
+  if (!lastTime) lastTime = time;
 
- const ankle={
-  x:hipX+step.x,
-  y:CONFIG.ground-7+step.y
- };
+  const delta = Math.min((time - lastTime) / 1000, .04);
+  lastTime = time;
+  elapsed += delta;
 
- const knee=solveIK(hip,ankle);
+  const cycle = (elapsed / cycleDuration) % 1;
 
- const upper=segmentPath(hip,knee,9);
- const lower=segmentPath(knee,ankle,6.5);
+  const phaseFront = cycle;
+  const phaseBack = (cycle + .5) % 1;
 
- $(prefix+'Upper').setAttribute('d',upper);
- $(prefix+'Lower').setAttribute('d',lower);
+  const travel = elapsed * travelSpeed;
 
- const sx=ankle.x;
- const sy=ankle.y;
+  let rootX = -90 + (travel % 980);
 
- const rotation=step.stance?0:
-  -Math.cos(Math.PI*step.progress)*12;
+  /*
+    اهتزاز الجسم بسيط ومربوط بدورة المشي.
+  */
+  const bob = Math.abs(Math.sin(cycle * Math.PI * 2)) * 3;
 
- const foot=`
- M ${sx-5} ${sy-4}
- Q ${sx-15} ${sy+2} ${sx-24} ${sy+5}
- Q ${sx-30} ${sy+10} ${sx-15} ${sy+11}
- L ${sx+11} ${sy+9}
- Q ${sx+17} ${sy+5} ${sx+6} ${sy-4}Z
- `;
+  const bodyRotation = Math.sin(cycle * Math.PI * 2) * 1.4;
 
- $(prefix+'Shoe').setAttribute(
-  'd',
-  foot
- );
+  character.setAttribute(
+    "transform",
+    `translate(${rootX} ${278 - bob}) rotate(${bodyRotation})`
+  );
 
- $(prefix+'Shoe').setAttribute(
-  'transform',
-  `rotate(${rotation} ${sx} ${sy})`
- );
+  /*
+    الرجل الخلفية تُرسم أولاً حتى لا تحجب الأمامية.
+  */
+  drawLeg("back", phaseBack, rootX, 0);
+  drawLeg("front", phaseFront, rootX, 0);
 
- $(prefix+'ShoeDetail').setAttribute(
-  'd',
-  `M ${sx-19} ${sy+6}
-   Q ${sx-4} ${sy+9} ${sx+11} ${sy+6}`
- );
+  drawArms(cycle);
 
- return step;
+  shadow.setAttribute("cx", rootX);
+  shadow.setAttribute("cy", 390);
+  shadow.setAttribute(
+    "rx",
+    36 - bob * .7
+  );
 
+  requestAnimationFrame(render);
 }
 
-function drawArm(id,phase,side){
+$("toggle").addEventListener("click", () => {
 
- const shoulder={
-  x:350+side*25,
-  y:166
- };
+  running = !running;
 
- const swing=Math.cos(phase*Math.PI*2)*23;
+  $("toggle").textContent =
+    running ? "إيقاف الحركة" : "تشغيل الحركة";
 
- const elbow={
-  x:shoulder.x+swing*.65+side*8,
-  y:shoulder.y+39
- };
+  if (running) {
+    lastTime = 0;
+    requestAnimationFrame(render);
+  }
+});
 
- const hand={
-  x:shoulder.x+swing+side*13,
-  y:shoulder.y+78
- };
+$("restart").addEventListener("click", () => {
 
- const upper=segmentPath(shoulder,elbow,8.5);
- const lower=segmentPath(elbow,hand,6);
+  elapsed = 0;
+  lastTime = 0;
 
- $(id+'Shape').setAttribute(
-  'd',
-  upper+lower
- );
+  if (!running) {
+    running = true;
+    $("toggle").textContent = "إيقاف الحركة";
+  }
 
- $(id+'Detail').setAttribute(
-  'd',
-  `M ${elbow.x-4} ${elbow.y}
-   Q ${elbow.x} ${elbow.y+5} ${elbow.x+4} ${elbow.y+9}`
- );
+  requestAnimationFrame(render);
+});
 
- $(id.replace('Arm','Hand')).setAttribute(
-  'd',
-  `M ${hand.x-5} ${hand.y}
-   Q ${hand.x-9} ${hand.y+9} ${hand.x-3} ${hand.y+14}
-   Q ${hand.x+7} ${hand.y+17} ${hand.x+8} ${hand.y+7}
-   L ${hand.x+3} ${hand.y-3}Z`
- );
-
-}
-
-function spring(current,velocity,target,dt){
-
- const stiffness=22;
- const damping=8;
-
- velocity+=(target-current)*stiffness*dt;
- velocity*=Math.exp(-damping*dt);
- current+=velocity*dt;
-
- return {current,velocity};
-
-}
-
-function update(dt){
-
- travel+=CONFIG.speed*dt;
-
- x-=CONFIG.speed*dt;
-
- if(x<-140){
-  x=840;
-  travel=0;
- }
-
- const phase=travel/CONFIG.stride;
-
- const frontPhase=mod(phase,1);
- const backPhase=mod(phase+.5,1);
-
- const frontStep=drawLeg(
-  'front',
-  343,
-  frontPhase
- );
-
- const backStep=drawLeg(
-  'back',
-  357,
-  backPhase
- );
-
- // Arms move opposite to legs
- drawArm('frontArm',backPhase,1);
- drawArm('backArm',frontPhase,-1);
-
- // Subtle body movement
- const bodyBob=
-  (frontStep.y+backStep.y)*-.025;
-
- $('torso').setAttribute(
-  'transform',
-  `translate(0 ${bodyBob})`
- );
-
- $('head').setAttribute(
-  'transform',
-  `translate(0 ${bodyBob})`
- );
-
- // Secondary motion
- const wave=Math.sin(phase*Math.PI*2);
-
- let s=spring(
-  scarfAngle,
-  scarfVelocity,
-  -wave*.13,
-  dt
- );
-
- scarfAngle=s.current;
- scarfVelocity=s.velocity;
-
- let c=spring(
-  coatAngle,
-  coatVelocity,
-  -wave*.10,
-  dt
- );
-
- coatAngle=c.current;
- coatVelocity=c.velocity;
-
- let b=spring(
-  bagAngle,
-  bagVelocity,
-  wave*.06,
-  dt
- );
-
- bagAngle=b.current;
- bagVelocity=b.velocity;
-
- $('scarfTail').setAttribute(
-  'transform',
-  `rotate(${scarfAngle*30} 329 145)`
- );
-
- $('coatTail').setAttribute(
-  'transform',
-  `rotate(${coatAngle*25} 312 255)`
- );
-
- $('bag').setAttribute(
-  'transform',
-  `rotate(${bagAngle*30} 310 190)`
- );
-
- walker.setAttribute(
-  'transform',
-  `translate(${x-350} 0)`
- );
-
-}
-
-function frame(time){
-
- if(!running)return;
-
- if(!previous)previous=time;
-
- const dt=Math.min(
-  (time-previous)/1000,
-  .035
- );
-
- previous=time;
-
- update(dt);
-
- requestAnimationFrame(frame);
-
-}
-
-function play(){
-
- if(running)return;
-
- running=true;
- previous=0;
-
- $('toggle').textContent='Pause';
-
- requestAnimationFrame(frame);
-
-}
-
-function pause(){
-
- running=false;
-
- $('toggle').textContent='Play';
-
-}
-
-$('toggle').onclick=()=>{
- running?pause():play();
-};
-
-$('slower').onclick=()=>{
- CONFIG.speed=45;
-};
-
-$('faster').onclick=()=>{
- CONFIG.speed=125;
-};
-
-$('normal').onclick=()=>{
- CONFIG.speed=85;
-};
-
-requestAnimationFrame(frame);
-
+requestAnimationFrame(render);
 </script>
 
 </body>
